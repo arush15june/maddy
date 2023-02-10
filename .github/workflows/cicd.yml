@@ -8,84 +8,6 @@ on:
     branches: [ master, dev ]
 
 jobs:
-  build-and-test:
-    name: "Build and test"
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: actions/checkout@v2
-    - name: "Install libpam"
-      run: sudo apt-get install -y libpam-dev
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cache/go-build
-          ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: ${{ runner.os }}-go-
-    - uses: actions/setup-go@v2
-      with:
-        go-version: 1.18.9
-    - name: "Verify build.sh"
-      run: |
-        ./build.sh
-        ./build.sh --destdir destdir/ install
-        find destdir/
-    - name: "Unit & module tests"
-      run: |
-        go test ./... -coverprofile=coverage.out -covermode=atomic
-    - name: "Integration tests"
-      run: |
-        cd tests/
-        ./run.sh
-    - uses: codecov/codecov-action@v2
-      with:
-        files: ./coverage.out
-        flags: unit
-    - uses: codecov/codecov-action@v2
-      with:
-        files: ./tests/coverage.out
-        flags: integration
-  artifact-builder:
-    name: "Prepare release artifacts"
-    needs: build-and-test
-    if: github.ref_type == 'tag'
-    runs-on: ubuntu-latest
-    container:
-      image: "alpine:edge"
-    steps:
-      - uses: actions/checkout@v1 # v2 does not work with containers
-      - name: "Install build dependencies"
-        run: |
-          apk add --no-cache gcc go zstd
-      - name: "Create and package build tree"
-        run: |
-          ./build.sh --builddir ~/package-output/ --static build
-          ver=$(cat .version)
-          if [ "v$ver" != "${{github.ref_name}}" ]; then echo ".version does not match the Git tag"; exit 1; fi
-          mv ~/package-output/ ~/maddy-$ver-x86_64-linux-musl
-          cd ~
-          tar c ./maddy-$ver-x86_64-linux-musl | zstd > ~/maddy-x86_64-linux-musl.tar.zst
-          cd -
-      - name: "Save source tree"
-        run: |
-          rm -rf .git
-          ver=$(cat .version)
-          cp -r . ~/maddy-$ver-src
-          cd ~
-          tar c ./maddy-$ver-src | zstd > ~/maddy-src.tar.zst
-          cd -
-      - name: "Upload source tree"
-        uses: actions/upload-artifact@v2
-        with:
-          name: maddy-src.tar.zst
-          path: '~/maddy-src.tar.zst'
-          if-no-files-found: error
-      - name: "Upload binary tree"
-        uses: actions/upload-artifact@v2
-        with:
-          name: maddy-binary.tar.zst
-          path: '~/maddy-x86_64-linux-musl.tar.zst'
-          if-no-files-found: error
   docker-builder:
     name: "Build & push Docker image"
     needs: build-and-test # Upload
@@ -117,8 +39,7 @@ jobs:
         id: meta
         with:
           images: |
-            foxcpp/maddy
-            ghcr.io/foxcpp/maddy
+            ghcr.io/arush15june/maddy
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
