@@ -11,7 +11,7 @@ on:
 jobs:
   docker-builder:
     name: "Build & push Docker image"
-    #if: github.ref_type == 'tag'
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
