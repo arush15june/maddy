@@ -19,7 +19,7 @@ require (
 	github.com/foxcpp/go-imap-i18nlevel v0.0.0-20200208001533-d6ec88553005
 	github.com/foxcpp/go-imap-mess v0.0.0-20230108134257-b7ec3a649613
 	github.com/foxcpp/go-imap-namespace v0.0.0-20200802091432-08496dd8e0ed
-	github.com/foxcpp/go-imap-sql v0.5.1-0.20230119225722-2c2868ce7ca7
+	github.com/foxcpp/go-imap-sql v0.5.1-0.20230313080458-c0176dad679c
 	github.com/foxcpp/go-mockdns v1.0.0
 	github.com/foxcpp/go-mtasts v0.0.0-20191219193356-62bc3f1f74b8
 	github.com/go-ldap/ldap/v3 v3.4.4
@@ -49,9 +49,9 @@ require (
 	github.com/urfave/cli/v2 v2.24.3
 	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.5.0
-	golang.org/x/net v0.5.0
+	golang.org/x/net v0.7.0
 	golang.org/x/sync v0.1.0
-	golang.org/x/text v0.6.0
+	golang.org/x/text v0.7.0
 )
 
 require (
@@ -131,7 +131,7 @@ require (
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/mod v0.7.0 // indirect
 	golang.org/x/oauth2 v0.4.0 // indirect
-	golang.org/x/sys v0.4.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.5.0 // indirect
 	google.golang.org/api v0.109.0 // indirect
